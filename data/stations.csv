@@ -1,0 +1,9 @@
+station_id,region,required_qualification,target_availability,loss_per_hour,shared_shock_group
+S1,R2,basic,0.98,250,G2
+S2,R1,basic,0.98,300,G1
+S3,R2,high,0.98,350,G2
+S4,R1,basic,0.98,400,G1
+S5,R2,basic,0.98,450,G2
+S6,R1,high,0.98,500,G1
+S7,R2,basic,0.98,550,G2
+S8,R1,basic,0.98,600,G1

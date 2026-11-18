@@ -1,0 +1,544 @@
+{
+  "title": "储能站维护的剩余风险与检修窗口分析",
+  "synthetic": true,
+  "tables": [
+    {
+      "name": "stations",
+      "description": "区域站点与可用性承诺。",
+      "columns": [
+        {
+          "name": "station_id",
+          "type": "string",
+          "description": "站",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "区域",
+          "nullable": true
+        },
+        {
+          "name": "required_qualification",
+          "type": "string",
+          "description": "资质",
+          "nullable": true
+        },
+        {
+          "name": "target_availability",
+          "type": "number",
+          "description": "目标",
+          "nullable": true
+        },
+        {
+          "name": "loss_per_hour",
+          "type": "number",
+          "description": "每停运小时损失",
+          "nullable": true
+        },
+        {
+          "name": "shared_shock_group",
+          "type": "string",
+          "description": "共同风险组",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "station_id"
+      ],
+      "references": [],
+      "path": "data/stations.csv",
+      "row_count": 8,
+      "sha256": "7d56b1b4ad0546076da0e08b11f943700959e1f7ef80c7ca7d7900775bbe7ed8"
+    },
+    {
+      "name": "components",
+      "description": "部件完整经历，本包全部为thermal类型。",
+      "columns": [
+        {
+          "name": "component_id",
+          "type": "string",
+          "description": "部件",
+          "nullable": true
+        },
+        {
+          "name": "station_id",
+          "type": "string",
+          "description": "站",
+          "nullable": true
+        },
+        {
+          "name": "batch",
+          "type": "string",
+          "description": "制造批",
+          "nullable": true
+        },
+        {
+          "name": "start",
+          "type": "date",
+          "description": "起日",
+          "nullable": true
+        },
+        {
+          "name": "end",
+          "type": "date",
+          "description": "止日",
+          "nullable": true
+        },
+        {
+          "name": "end_reason",
+          "type": "string",
+          "description": "更换或仍运行",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "component_id"
+      ],
+      "references": [
+        {
+          "column": "station_id",
+          "target_table": "stations",
+          "target_column": "station_id"
+        }
+      ],
+      "path": "data/components.csv",
+      "row_count": 71,
+      "sha256": "1ff761ea25653d59e1032cf69ccd0cb9537c0d8e570e159ee18b96e9f848c9bf"
+    },
+    {
+      "name": "condition_readings",
+      "description": "状态及有效运行暴露。",
+      "columns": [
+        {
+          "name": "reading_id",
+          "type": "string",
+          "description": "记录",
+          "nullable": true
+        },
+        {
+          "name": "component_id",
+          "type": "string",
+          "description": "部件",
+          "nullable": true
+        },
+        {
+          "name": "date",
+          "type": "date",
+          "description": "日",
+          "nullable": true
+        },
+        {
+          "name": "signal",
+          "type": "number",
+          "description": "状态测量",
+          "nullable": true
+        },
+        {
+          "name": "sensor_state",
+          "type": "string",
+          "description": "observed或lost",
+          "nullable": true
+        },
+        {
+          "name": "operating_hours",
+          "type": "number",
+          "description": "本段运行小时",
+          "nullable": true
+        },
+        {
+          "name": "available_at",
+          "type": "datetime",
+          "description": "可知",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "reading_id"
+      ],
+      "references": [
+        {
+          "column": "component_id",
+          "target_table": "components",
+          "target_column": "component_id"
+        }
+      ],
+      "path": "data/condition_readings.csv",
+      "row_count": 1623,
+      "sha256": "9bfeaa119821e6a044a01c2cb41b93017b8e8617dbdae4ebe2e4bc7a0ae6e401"
+    },
+    {
+      "name": "failures",
+      "description": "非计划停运结局。",
+      "columns": [
+        {
+          "name": "failure_id",
+          "type": "string",
+          "description": "故障",
+          "nullable": true
+        },
+        {
+          "name": "component_id",
+          "type": "string",
+          "description": "部件",
+          "nullable": true
+        },
+        {
+          "name": "occurred_at",
+          "type": "datetime",
+          "description": "发生",
+          "nullable": true
+        },
+        {
+          "name": "downtime_hours",
+          "type": "number",
+          "description": "停运小时",
+          "nullable": true
+        },
+        {
+          "name": "kind",
+          "type": "string",
+          "description": "类型",
+          "nullable": true
+        },
+        {
+          "name": "available_at",
+          "type": "datetime",
+          "description": "可知",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "failure_id"
+      ],
+      "references": [
+        {
+          "column": "component_id",
+          "target_table": "components",
+          "target_column": "component_id"
+        }
+      ],
+      "path": "data/failures.csv",
+      "row_count": 9,
+      "sha256": "b4b793cf3a3437afa3d9914b5bd4467c1cd2170c7b1997bcd4caf9c31b2d0013"
+    },
+    {
+      "name": "work_orders",
+      "description": "计划、落实和实际动作。",
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "string",
+          "description": "工单",
+          "nullable": true
+        },
+        {
+          "name": "component_id",
+          "type": "string",
+          "description": "部件",
+          "nullable": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "description": "建立",
+          "nullable": true
+        },
+        {
+          "name": "scheduled_at",
+          "type": "datetime",
+          "description": "计划",
+          "nullable": true
+        },
+        {
+          "name": "done_at",
+          "type": "datetime",
+          "description": "完成",
+          "nullable": true
+        },
+        {
+          "name": "action",
+          "type": "string",
+          "description": "处置",
+          "nullable": true
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "description": "complete或partial",
+          "nullable": true
+        },
+        {
+          "name": "cost",
+          "type": "number",
+          "description": "成本",
+          "nullable": true
+        },
+        {
+          "name": "downtime_hours",
+          "type": "number",
+          "description": "计划停运",
+          "nullable": true
+        },
+        {
+          "name": "available_at",
+          "type": "datetime",
+          "description": "可知",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "order_id"
+      ],
+      "references": [
+        {
+          "column": "component_id",
+          "target_table": "components",
+          "target_column": "component_id"
+        }
+      ],
+      "path": "data/work_orders.csv",
+      "row_count": 22,
+      "sha256": "e99c68d439db4be06384365a102dc37341165e59748356ab3194fd106495089a"
+    },
+    {
+      "name": "windows",
+      "description": "未来各站可用低负荷窗口；不同站可同日竞争。",
+      "columns": [
+        {
+          "name": "window_id",
+          "type": "string",
+          "description": "窗口",
+          "nullable": true
+        },
+        {
+          "name": "station_id",
+          "type": "string",
+          "description": "站",
+          "nullable": true
+        },
+        {
+          "name": "start",
+          "type": "datetime",
+          "description": "开始",
+          "nullable": true
+        },
+        {
+          "name": "hours",
+          "type": "number",
+          "description": "时长",
+          "nullable": true
+        },
+        {
+          "name": "loss_multiplier",
+          "type": "number",
+          "description": "相对损失",
+          "nullable": true
+        },
+        {
+          "name": "safety_due",
+          "type": "date",
+          "description": "最迟处理",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "window_id"
+      ],
+      "references": [
+        {
+          "column": "station_id",
+          "target_table": "stations",
+          "target_column": "station_id"
+        }
+      ],
+      "path": "data/windows.csv",
+      "row_count": 32,
+      "sha256": "0dc656c8d27a235380d64bec10cfaf0908eb080136a8be0ab4edae29fd89b74a"
+    },
+    {
+      "name": "crews",
+      "description": "跨站共享班组。",
+      "columns": [
+        {
+          "name": "crew_id",
+          "type": "string",
+          "description": "班组",
+          "nullable": true
+        },
+        {
+          "name": "qualification",
+          "type": "string",
+          "description": "资质",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "区域",
+          "nullable": true
+        },
+        {
+          "name": "hours_daily",
+          "type": "number",
+          "description": "每日可用小时",
+          "nullable": true
+        },
+        {
+          "name": "travel_hours",
+          "type": "number",
+          "description": "跨站占用",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "crew_id"
+      ],
+      "references": [],
+      "path": "data/crews.csv",
+      "row_count": 3,
+      "sha256": "11545509f9c6361d9e721f9bd970560f0f279bf85c9323714ea67f797d3ad53d"
+    },
+    {
+      "name": "action_requirements",
+      "description": "处置所需资源；pair_group相同需要同停机。",
+      "columns": [
+        {
+          "name": "component_type",
+          "type": "string",
+          "description": "类型",
+          "nullable": true
+        },
+        {
+          "name": "action",
+          "type": "string",
+          "description": "动作",
+          "nullable": true
+        },
+        {
+          "name": "hours",
+          "type": "number",
+          "description": "工时",
+          "nullable": true
+        },
+        {
+          "name": "part_id",
+          "type": "string",
+          "description": "物料",
+          "nullable": true
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "description": "数量",
+          "nullable": true
+        },
+        {
+          "name": "pair_group",
+          "type": "string",
+          "description": "同停机组",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "component_type",
+        "action"
+      ],
+      "references": [],
+      "path": "data/action_requirements.csv",
+      "row_count": 3,
+      "sha256": "c968bf7111694147dcfcf553ca8b142f3bbdc0d7c3e0bea9102d2cd07ed1e0bf"
+    },
+    {
+      "name": "resources",
+      "description": "未来可用物料及已占用。",
+      "columns": [
+        {
+          "name": "part_id",
+          "type": "string",
+          "description": "物料",
+          "nullable": true
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "description": "数量",
+          "nullable": true
+        },
+        {
+          "name": "reserved",
+          "type": "integer",
+          "description": "其他已承诺",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "part_id"
+      ],
+      "references": [],
+      "path": "data/resources.csv",
+      "row_count": 2,
+      "sha256": "fce8c7fdd3ddc0a94b467a1ab5374c82509faaacb960e0df879d29578ecebe62"
+    },
+    {
+      "name": "emergencies",
+      "description": "可供后续录入的实际抢修事实。",
+      "columns": [
+        {
+          "name": "emergency_id",
+          "type": "string",
+          "description": "抢修",
+          "nullable": true
+        },
+        {
+          "name": "station_id",
+          "type": "string",
+          "description": "站",
+          "nullable": true
+        },
+        {
+          "name": "date",
+          "type": "date",
+          "description": "日期",
+          "nullable": true
+        },
+        {
+          "name": "crew_id",
+          "type": "string",
+          "description": "占用班组",
+          "nullable": true
+        },
+        {
+          "name": "hours",
+          "type": "number",
+          "description": "占用小时",
+          "nullable": true
+        },
+        {
+          "name": "available_at",
+          "type": "datetime",
+          "description": "可知",
+          "nullable": true
+        }
+      ],
+      "key": [
+        "emergency_id"
+      ],
+      "references": [
+        {
+          "column": "station_id",
+          "target_table": "stations",
+          "target_column": "station_id"
+        },
+        {
+          "column": "crew_id",
+          "target_table": "crews",
+          "target_column": "crew_id"
+        }
+      ],
+      "path": "data/emergencies.csv",
+      "row_count": 1,
+      "sha256": "4472ae6512dfd67bfb07c33813ae23a46c53f95a03ca8a9dbb707811910b8d0e"
+    }
+  ]
+}

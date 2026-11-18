@@ -1,0 +1,4 @@
+component_type,action,hours,part_id,quantity,pair_group
+thermal,replace,3,P1,1,thermal
+thermal,repair,2,P2,1,thermal
+thermal,clean,1,,0,thermal

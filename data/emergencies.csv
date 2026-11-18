@@ -1,0 +1,2 @@
+emergency_id,station_id,date,crew_id,hours,available_at
+EM1,S3,2025-11-09,CR1,6,2025-11-08T18:00:00+08:00
