@@ -165,7 +165,7 @@
       ],
       "path": "data/condition_readings.csv",
       "row_count": 1623,
-      "sha256": "9bfeaa119821e6a044a01c2cb41b93017b8e8617dbdae4ebe2e4bc7a0ae6e401"
+      "sha256": "f0ce79be3239497302223b8f1da50d46121658314ee42b56e38b1795b502d933"
     },
     {
       "name": "failures",
@@ -220,7 +220,7 @@
       ],
       "path": "data/failures.csv",
       "row_count": 9,
-      "sha256": "b4b793cf3a3437afa3d9914b5bd4467c1cd2170c7b1997bcd4caf9c31b2d0013"
+      "sha256": "ed1f6785a410570ab66847f4af2d1bebec662b82fcc59c0495d62309a5aff7dc"
     },
     {
       "name": "work_orders",
